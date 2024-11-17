@@ -1,0 +1,75 @@
+---
+import LanguageSelector from './LanguageSelector.astro';
+
+interface Props {
+  translations: {
+    nav: {
+      home: string;
+      about: string;
+      services: string;
+      projects: string;
+      contact: string;
+    };
+  };
+  currentLang: string;
+}
+
+const { translations, currentLang } = Astro.props;
+
+const menuItems = [
+  { href: "#home", text: translations.nav.home },
+  { href: "#about", text: translations.nav.about },
+  { href: "#services", text: translations.nav.services },
+  { href: "#projects", text: translations.nav.projects },
+  { href: "#contact", text: translations.nav.contact },
+];
+
+const BRAND_NAME = "Synplia";
+---
+
+<header class="fixed w-full z-50 bg-primary/80 backdrop-blur-md">
+  <nav class="container mx-auto px-6 py-4">
+    <div class="flex justify-between items-center">
+      <a href="#" class="flex items-center gap-3 text-2xl font-bold">
+        <svg 
+          class="w-8 h-8" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+            class="text-white"
+            fill="currentColor"
+            fill-opacity="0.2"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="6"
+            class="text-accent"
+            fill="currentColor"
+          />
+        </svg>
+        <span class="text-white">
+          {BRAND_NAME}
+        </span>
+      </a>
+      <div class="hidden md:flex items-center space-x-8">
+        {
+          menuItems.map((item) => (
+            <a
+              href={item.href}
+              class="text-white/80 hover:text-white transition-colors"
+            >
+              {item.text}
+            </a>
+          ))
+        }
+        <LanguageSelector currentLang={currentLang} />
+      </div>
+    </div>
+  </nav>
+</header>

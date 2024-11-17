@@ -1,0 +1,113 @@
+---
+import { getCachedFeaturedProjects } from '../lib/github';
+import type { Project } from '../lib/github';
+
+interface Props {
+  translations: {
+    projects: {
+      title: string;
+      noProjects: string;
+      lastUpdate: string;
+    };
+  };
+}
+
+const { translations } = Astro.props;
+
+let projects: Project[] = [];
+try {
+  projects = await getCachedFeaturedProjects();
+} catch (e) {
+  console.error('Error fetching projects:', e);
+}
+
+function formatDate(dateString: string) {
+  try {
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (e) {
+    console.error('Error formatting date:', e);
+    return dateString;
+  }
+}
+---
+
+<section id="projects" class="py-20 bg-primary">
+  <div class="container mx-auto px-6">
+    <h2 class="text-4xl font-bold text-center mb-16 text-white">
+      {translations.projects.title}
+    </h2>
+
+    {projects.length === 0 ? (
+      <div class="text-center text-white/80 py-8">
+        <p>{translations.projects.noProjects}</p>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {projects.map((project) => (
+          <a 
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <div class="relative aspect-video overflow-hidden">
+              <img
+                src={project.image}
+                alt={project.title}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  img.src = '/projects/default-project.jpg';
+                }}
+              />
+              <div class="absolute top-4 right-4 flex items-center space-x-2">
+                <span class="bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
+                  <svg class="w-4 h-4 text-accent-light" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  <span class="text-white">{project.stars}</span>
+                </span>
+                {project.language && (
+                  <span class="bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-white">
+                    {project.language}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div class="p-6">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-semibold text-white group-hover:text-accent-light transition-colors">
+                  {project.title}
+                </h3>
+              </div>
+
+              <p class="text-white/80 mb-4 line-clamp-2">
+                {project.description}
+              </p>
+
+              <div class="space-y-4">
+                <div class="flex flex-wrap gap-2">
+                  {project.tech.map((tech) => (
+                    <span class="px-3 py-1 bg-accent/20 text-accent-light rounded-full text-sm font-medium">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                <div class="text-sm text-white/60">
+                  {translations.projects.lastUpdate} {formatDate(project.updatedAt)}
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</section>

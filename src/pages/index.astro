@@ -1,0 +1,13 @@
+---
+const isProduction = import.meta.env.PROD;
+const basePath = isProduction ? '/Synplia' : '';
+
+const preferredLanguage = Astro.request.headers.get('accept-language')?.split(',')[0].split('-')[0] || 'es';
+
+const supportedLanguages = ['es', 'en'];
+const defaultLanguage = 'es';
+
+const targetLanguage = supportedLanguages.includes(preferredLanguage) ? preferredLanguage : defaultLanguage;
+
+return Astro.redirect(`${basePath}/${targetLanguage}`);
+---

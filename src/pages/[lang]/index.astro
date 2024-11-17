@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import About from '../../components/About.astro';
+import Services from '../../components/Services.astro';
+import Projects from '../../components/Projects.astro';
+import Contact from '../../components/Contact.astro';
+import { es, en } from '../../i18n/translations';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'es' }, props: { translations: es } },
+    { params: { lang: 'en' }, props: { translations: en } }
+  ];
+}
+
+const { lang } = Astro.params;
+const { translations } = Astro.props;
+---
+
+<Layout title="Synplia Studio - Software Development" lang={lang} translations={translations}>
+  <Hero translations={translations} />
+  <About translations={translations} />
+  <Services translations={translations} />
+  <Projects translations={translations} />
+  <Contact translations={translations} />
+</Layout>
