@@ -16,9 +16,11 @@ export function getStaticPaths() {
 
 const { lang } = Astro.params;
 const { translations } = Astro.props;
+
+const validLang = (lang === 'es' || lang === 'en') ? lang : 'es';
 ---
 
-<Layout title="Synplia Studio - Software Development" lang={lang} translations={translations}>
+<Layout title="Synplia Studio - Software Development" lang={validLang} translations={translations}>
   <Hero translations={translations} />
   <About translations={translations} />
   <Services translations={translations} />

@@ -121,6 +121,13 @@ const { translations } = Astro.props;
       </div>
     </div>
   </div>
+  
+  <div 
+    id="formTranslations" 
+    data-success={translations.contact.form.success}
+    data-error={translations.contact.form.error}
+    hidden
+  ></div>
 
   <ToastContainer
     client:load
@@ -146,8 +153,14 @@ const { translations } = Astro.props;
   }
 
   let toastify: Toastify;
-  const { translations } = Astro.props;
   let form = document.getElementById('contactForm') as HTMLFormElement;
+  
+  // Obtener las traducciones del elemento oculto
+  const translationsElement = document.getElementById('formTranslations');
+  const translations = {
+    success: translationsElement?.dataset.success || 'Message sent successfully',
+    error: translationsElement?.dataset.error || 'Error sending message'
+  };
   
   async function loadDependencies() {
     const { toast } = await import('react-toastify');
@@ -179,13 +192,13 @@ const { translations } = Astro.props;
         await emailjs.sendForm(serviceId, templateId, form, publicKey);
         
         toastify.toast.success(
-          translations.contact.form.success,
+          translations.success,
           { theme: "dark" }
         );
         form.reset();
       } catch (error) {
         toastify.toast.error(
-          translations.contact.form.error,
+          translations.error,
           { theme: "dark" }
         );
       } finally {

@@ -6,6 +6,10 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 export default defineConfig({
   integrations: [tailwind(), react()],
+  output: 'static',
+  build: {
+    assets: 'assets'
+  },
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],

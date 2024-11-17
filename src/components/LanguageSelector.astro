@@ -20,19 +20,27 @@ const basePath = isProduction ? '/Synplia' : '';
   </div>
 </div>
 
-<script>
-  const languageSelector = document.getElementById('language-selector') as HTMLSelectElement;
-  const isProduction = import.meta.env.PROD;
-  const basePath = isProduction ? '/Synplia' : '';
-  
-  languageSelector?.addEventListener('change', (e) => {
-    const newLang = (e.target as HTMLSelectElement).value;
-    const currentPath = window.location.pathname.replace(basePath, '');
-    
-    if (newLang === 'en') {
-      window.location.href = `${basePath}${currentPath.replace(/^\/es\//, '/en/').replace(/^\/$/, '/en/')}`;
-    } else {
-      window.location.href = `${basePath}${currentPath.replace(/^\/en\//, '/es/').replace(/^\/$/, '/es/')}`;
+<script define:vars={{ basePath, currentLang }}>
+  function changeLang(newLang) {
+    const url = basePath ? `${basePath}/${newLang}/` : `/${newLang}/`;
+    console.log('Redirecting to:', url);
+    window.location.replace(url);
+  }
+
+  const setup = () => {
+    const selector = document.getElementById('language-selector');
+    if (selector) {
+      selector.addEventListener('change', (e) => {
+        const newLang = e.target.value;
+        console.log('Language changed to:', newLang);
+        changeLang(newLang);
+      });
     }
-  });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setup);
+  } else {
+    setup();
+  }
 </script>
