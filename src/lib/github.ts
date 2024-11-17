@@ -1,10 +1,10 @@
 import { Octokit } from '@octokit/rest';
 
 const octokit = new Octokit({
-  auth: import.meta.env.GITHUB_TOKEN
+  auth: import.meta.env.REPO_TOKEN
 });
 
-const GITHUB_ORG = import.meta.env.GITHUB_ORG;
+const ORG_NAME = import.meta.env.ORG_NAME;
 
 export interface Project {
   title: string;
@@ -20,7 +20,7 @@ export interface Project {
 export async function getFeaturedProjects(): Promise<Project[]> {
   try {
     const { data: repos } = await octokit.repos.listForOrg({
-      org: GITHUB_ORG,
+      org: ORG_NAME,
       sort: 'updated',
       per_page: 100,
       type: 'public'
@@ -35,7 +35,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
           
           try {
             const { data: readme } = await octokit.repos.getReadme({
-              owner: GITHUB_ORG,
+              owner: ORG_NAME,
               repo: repo.name,
             });
             
@@ -47,7 +47,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
               if (imagePath.startsWith('http')) {
                 readmeImage = imagePath;
               } else {
-                readmeImage = `https://raw.githubusercontent.com/${GITHUB_ORG}/${repo.name}/main/${imagePath.replace(/^\.\//, '')}`;
+                readmeImage = `https://raw.githubusercontent.com/${ORG_NAME}/${repo.name}/main/${imagePath.replace(/^\.\//, '')}`;
               }
             }
           } catch (error) {
@@ -57,7 +57,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
           let languages: string[] = [];
           try {
             const { data: languagesData } = await octokit.repos.listLanguages({
-              owner: GITHUB_ORG,
+              owner: ORG_NAME,
               repo: repo.name,
             });
             languages = Object.keys(languagesData);

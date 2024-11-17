@@ -95,7 +95,7 @@ const { translations } = Astro.props;
                   {translations.contact.form.submit}
                 </span>
                 <svg 
-                  class="w-5 h-5 opacity-0 group-disabled:opacity-100 animate-spin absolute"
+                  class="w-5 h-5 opacity-0 group-disabled:opacity-100 animate-spin absolute left-50"
                   xmlns="http://www.w3.org/2000/svg" 
                   fill="none" 
                   viewBox="0 0 24 24"
@@ -121,7 +121,7 @@ const { translations } = Astro.props;
       </div>
     </div>
   </div>
-  
+
   <div 
     id="formTranslations" 
     data-success={translations.contact.form.success}
@@ -179,14 +179,14 @@ const { translations } = Astro.props;
       button.disabled = true;
 
       try {
-        const { default: emailjs } = await import('@emailjs/browser');
+        const emailjs = await import('@emailjs/browser');
 
         const serviceId = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
         const templateId = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
-        const publicKey = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY;
+        const publicKey = import.meta.env.PUBLIC_EMAILJS_KEY;
 
         if (!serviceId || !templateId || !publicKey) {
-          throw new Error('Missing EmailJS configuration');
+          throw new Error('Missing PUBLIC_EMAILJS configuration');
         }
 
         await emailjs.sendForm(serviceId, templateId, form, publicKey);

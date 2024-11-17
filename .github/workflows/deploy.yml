@@ -42,7 +42,11 @@ jobs:
       - name: Build project
         run: npm run build
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+          ORG_NAME: ${{ vars.ORG_NAME }}
+          PUBLIC_EMAILJS_KEY: ${{ secrets.PUBLIC_EMAILJS_KEY }}
+          PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.PUBLIC_EMAILJS_SERVICE_ID }}
+          PUBLIC_EMAILJS_TEMPLATE_ID: ${{ secrets.PUBLIC_EMAILJS_TEMPLATE_ID }}
           NODE_ENV: production
 
       - name: Upload Pages artifact
